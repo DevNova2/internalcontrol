@@ -63,3 +63,6 @@ node-v*-linux-*/
 # strategy-charts-vue 临时导出图
 /strategy-charts-vue/Page29-*.svg
 /strategy-charts-vue/pc07_*.svg
+
+# ICIR-vue 生成的业务数据
+/ICIR-vue/frontend/public/haochi.json
