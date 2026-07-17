@@ -1,0 +1,263 @@
+:root {
+  color-scheme: light;
+  --bg: #f2f5f9;
+  --panel: #ffffff;
+  --text: #172033;
+  --muted: #5b6678;
+  --line: #d8e0ec;
+  --accent: #264e8a;
+  --accent-strong: #15345f;
+  --up: #d72f2f;
+  --down: #11824b;
+  --shadow: 0 16px 36px rgba(25, 40, 68, 0.09);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f4f6fa;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+#app {
+  min-height: 100vh;
+  background: url("/assets/bg-internal-__V4p3uv.png") center / cover no-repeat fixed;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1540px, calc(100vw - 36px));
+  margin: 0 auto;
+  padding: 22px 0 32px;
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+  color: #f8fbff;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: rgba(232, 240, 252, 0.78);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.controls label {
+  display: grid;
+  gap: 6px;
+  color: rgba(240, 246, 255, 0.88);
+  font-size: 13px;
+}
+
+.controls input {
+  width: 152px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 10px;
+  background: #fff;
+  color: var(--text);
+}
+
+.controls button {
+  height: 38px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0 16px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.controls .ghost-button {
+  background: #fff;
+  color: var(--accent-strong);
+}
+
+.status-strip {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(120px, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--line);
+  box-shadow: var(--shadow);
+}
+
+.status-strip > div {
+  min-height: 72px;
+  padding: 14px 16px;
+  background: var(--panel);
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status-strip strong {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.up {
+  color: var(--up);
+}
+
+.down {
+  color: var(--down);
+}
+
+.chart-area {
+  position: relative;
+  margin-top: 16px;
+  min-height: 760px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  grid-template-rows: minmax(360px, 1fr) minmax(360px, 1fr);
+  gap: 16px;
+  min-height: 792px;
+}
+
+.chart-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.chart-card-tall {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.chart {
+  width: 100%;
+}
+
+.chart-half {
+  height: 380px;
+}
+
+.chart-tall {
+  height: 776px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: rgba(246, 248, 252, 0.82);
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.overlay-error {
+  padding: 32px;
+  color: #9f1239;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .page-shell {
+    width: min(100vw - 20px, 1540px);
+    padding-top: 14px;
+  }
+
+  .app-header,
+  .controls {
+    display: grid;
+    align-items: stretch;
+  }
+
+  .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .controls input {
+    width: 100%;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+
+  .status-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .chart-area,
+  .chart-grid {
+    min-height: 0;
+  }
+
+  .chart-area {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .chart-card-tall {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .chart-half,
+  .chart-tall {
+    height: 360px;
+  }
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=JQ2 DB Normal Service
+After=network.target
+
+[Service]
+Type=simple
+User=roger
+WorkingDirectory=/home/roger/sdq/monitor
+ExecStart=/home/roger/sdq/.venv/bin/python /home/roger/sdq/monitor/jq3-yk-margin.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

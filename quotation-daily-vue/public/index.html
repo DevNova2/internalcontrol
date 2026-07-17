@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>当日盘面涨跌分布</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="app">
+    <main class="page-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Quotation Daily</p>
+          <h1>当日盘面涨跌分布</h1>
+        </div>
+
+        <form class="controls" @submit.prevent="refreshRange">
+          <label>
+            <span>开始时间</span>
+            <input v-model="startDate" type="date">
+          </label>
+          <label>
+            <span>结束时间</span>
+            <input v-model="endDate" type="date">
+          </label>
+          <button type="submit">刷新</button>
+          <button type="button" class="ghost-button" @click="loadLatest">最新</button>
+          <button type="button" class="ghost-button" @click="loadRangePreset('oneMonth')">近1月</button>
+          <button type="button" class="ghost-button" @click="loadRangePreset('threeMonth')">近3月</button>
+          <button type="button" class="ghost-button" @click="loadRangePreset('halfYear')">近半年</button>
+          <button type="button" class="ghost-button" @click="loadRangePreset('thisYear')">今年</button>
+        </form>
+      </header>
+
+      <section class="status-strip">
+        <div>
+          <span class="label">{{ statusTitle }}</span>
+          <strong>{{ statusText }}</strong>
+        </div>
+        <div>
+          <span class="label">上涨</span>
+          <strong class="up">{{ summary.positive }}</strong>
+        </div>
+        <div>
+          <span class="label">下跌</span>
+          <strong class="down">{{ summary.negative }}</strong>
+        </div>
+        <div>
+          <span class="label">平盘</span>
+          <strong>{{ summary.zero }}</strong>
+        </div>
+        <div>
+          <span class="label">样本数</span>
+          <strong>{{ summary.total || '-' }}</strong>
+        </div>
+      </section>
+
+      <section class="chart-area">
+        <div v-if="loading" class="overlay">加载中...</div>
+        <div v-if="error" class="overlay overlay-error">{{ error }}</div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div id="market-chart" class="chart chart-half"></div>
+          </div>
+          <div class="chart-card chart-card-tall">
+            <div id="distribution-chart" class="chart chart-tall"></div>
+          </div>
+          <div class="chart-card">
+            <div id="industry-chart" class="chart chart-half"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/vendor/vue.global.prod.js"></script>
+  <script src="/vendor/plotly.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

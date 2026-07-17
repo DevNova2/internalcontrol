@@ -1,0 +1,14 @@
+[Unit]
+Description=Show Page Dash Service
+After=network.target
+
+[Service]
+Type=simple
+User=roger
+WorkingDirectory=/home/roger/sdq/monitor
+ExecStart=/home/roger/sdq/.venv/bin/python /home/roger/sdq/monitor/show_page.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

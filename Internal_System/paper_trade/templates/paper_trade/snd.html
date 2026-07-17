@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 策略 {{ pro }} - 其他统计 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig_chg|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_chg_h|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig_ana|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_ana_h|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-12">
+            {{ fig_turn|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-12">
+            {{ fig_mean|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ indus|safe }}
+        </div>
+        <div class="col-6">
+            {{ size|safe }}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

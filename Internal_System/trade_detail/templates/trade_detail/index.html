@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 各券商交易细节 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-center"><h4>各端口交易细节对比 ~ 交易日：{{ trade_date }}</h4></div>
+        <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ dmz_zx|safe }}
+        </div>
+        <div class="col-6">
+            {{ alpha_margin|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+
+        <div class="col-6">
+            {{ alpha_df|safe }}
+        </div>
+    </div>
+
+{#    <div class="row justify-content-center" style="margin-top: 3em;">#}
+    {##}
+    {#        <div class="col-6">#}
+    {#            {{ yk_cj|safe }}#}
+    {#        </div>#}
+    {##}
+    {#    </div>#}
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

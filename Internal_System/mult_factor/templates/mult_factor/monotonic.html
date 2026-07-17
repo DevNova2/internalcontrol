@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}单调性：{{ text }}{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ fig_all|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ fig_des|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ fig_size|safe }}
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

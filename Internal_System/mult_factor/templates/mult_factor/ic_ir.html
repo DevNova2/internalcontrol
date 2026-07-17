@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} IC_IR {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-center"><h4>IC_IR ~ {{ the_date }}，阿尔法因子池：{{ picks }}</h4></div>
+    {% for fig in figs %}
+        <div class="row justify-content-center" style="margin-top: 3em;">
+
+            <div class="col-6">
+                {{ fig.0|safe }}
+            </div>
+            <div class="col-6">
+                {{ fig.1|safe }}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}STYLE FACTOR{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ size_v3|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ vol_v3|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            <h6>说明：</h6>
+            <ul>
+                <li>红线（左轴）：MEAN(短期【7, 12, 17】风格因子敏感系数 / 其标准差)</li>
+                <li>蓝线（左轴）：红线三年滑窗的中位数</li>
+                <li>绿点（右轴）：根据红线近5日的斜率变化得出的风格权重分配</li>
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

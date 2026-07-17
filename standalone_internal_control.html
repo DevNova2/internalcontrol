@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内控系统四图总览</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f4f6fa;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 1680px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .left-column {
+            display: grid;
+            gap: 24px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #dde4ee;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(31, 41, 55, 0.06);
+            padding: 18px 18px 12px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .panel-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #eaf0fb;
+            color: #365784;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .panel-subtitle {
+            margin: 0 0 10px;
+            color: #667085;
+            font-size: 13px;
+        }
+
+        .chart {
+            width: 100%;
+            min-height: 320px;
+        }
+
+        @media (max-width: 1280px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                padding: 16px;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="dashboard">
+            <div class="left-column">
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">换仓数据</h2>
+                        <span class="panel-tag">数据日期 2026-04-20</span>
+                    </div>
+                    <p class="panel-subtitle">沿用首图顶部左侧风格，展示买入与卖出股票的分时变化。</p>
+                    <div id="turn-chart" class="chart"></div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">交割单图</h2>
+                        <span class="panel-tag">数据日期 2024-09-25</span>
+                    </div>
+                    <p class="panel-subtitle">替换原盈亏图，展示股衍交割单的累计净成交与订单金额。</p>
+                    <div id="settlement-chart" class="chart"></div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">阿尔法1号_长江两融_模型</h2>
+                        <span class="panel-tag">数据日期 2024-11-15</span>
+                    </div>
+                    <p class="panel-subtitle">替换原杠杆图，展示模型分时买卖均值与差值走势。</p>
+                    <div id="model-chart" class="chart"></div>
+                </article>
+            </div>
+
+            <article class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">中位数偏离</h2>
+                    <span class="panel-tag">数据日期 2026-04-20</span>
+                </div>
+                <p class="panel-subtitle">沿用首图右侧的大图区块，展示当前股票相对中位数的偏离分布。</p>
+                <div id="deviation-chart" class="chart"></div>
+            </article>
+        </section>
+    </div>
+
+    <script>
+        const CONFIG = {
+            monitorDate: "2026-04-20",
+            monitorProduct: "进取2-东北-两融",
+            monitorKey: "jq2",
+            tradeDetailDate: "2024-09-25",
+            modelDate: "2024-11-15",
+            paths: {
+                monitorCsv: "./data/进取2-东北-两融/2026-04-20-gy.csv",
+                turnoverJson: "./data/common/2026-04-20.json",
+                settlementCsv: "./data/阿尔法1号-交易细节/2024-09-25/dma_zx.csv",
+                modelCsv: "./data/阿尔法1号-长江两融/2024-11-15/minute_cj_first_v2_0.csv"
+            }
+        };
+
+        async function fetchText(path) {
+            const response = await fetch(encodeURI(path));
+            if (!response.ok) {
+                throw new Error("读取失败: " + path);
+            }
+            return response.text();
+        }
+
+        async function fetchJson(path) {
+            const response = await fetch(encodeURI(path));
+            if (!response.ok) {
+                throw new Error("读取失败: " + path);
+            }
+            return response.json();
+        }
+
+        function parseCsv(text) {
+            const rows = [];
+            let row = [];
+            let field = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i += 1) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (char === "\"") {
+                    if (inQuotes && next === "\"") {
+                        field += "\"";
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === "," && !inQuotes) {
+                    row.push(field);
+                    field = "";
+                } else if ((char === "\n" || char === "\r") && !inQuotes) {
+                    if (char === "\r" && next === "\n") {
+                        i += 1;
+                    }
+                    row.push(field);
+                    field = "";
+                    if (row.some((item) => item !== "")) {
+                        rows.push(row);
+                    }
+                    row = [];
+                } else {
+                    field += char;
+                }
+            }
+
+            if (field !== "" || row.length > 0) {
+                row.push(field);
+                if (row.some((item) => item !== "")) {
+                    rows.push(row);
+                }
+            }
+
+            const headers = rows[0] || [];
+            return rows.slice(1).map((values) => {
+                const record = {};
+                headers.forEach((header, index) => {
+                    record[header] = values[index] ?? "";
+                });
+                return record;
+            });
+        }
+
+        function loadMatrixCsv(text) {
+            const lines = parseCsv(text);
+            if (!lines.length) {
+                return { times: [], columns: [] };
+            }
+
+            const headers = Object.keys(lines[0]);
+            const timeKey = headers[0];
+            const columnKeys = headers.slice(1);
+            const times = [];
+
+            const columns = columnKeys.map((key) => ({
+                name: key,
+                values: []
+            }));
+
+            lines.forEach((line) => {
+                const timeValue = String(line[timeKey] || "").slice(0, 5);
+                times.push(timeValue);
+                columnKeys.forEach((key, index) => {
+                    const raw = line[key];
+                    const value = raw === "" ? null : Number(raw);
+                    columns[index].values.push(Number.isFinite(value) ? value : null);
+                });
+            });
+
+            return { times, columns };
+        }
+
+        function toMonitorCode(rawCode) {
+            if (!rawCode || rawCode.length < 4) {
+                return rawCode;
+            }
+            return rawCode.slice(2) + "." + rawCode.slice(0, 2);
+        }
+
+        function baseLayout(title, height) {
+            return {
+                title,
+                height,
+                autosize: true,
+                paper_bgcolor: "white",
+                plot_bgcolor: "#edf2f7",
+                font: { size: 16, color: "#1f2937" },
+                margin: { l: 56, r: 32, t: 64, b: 56 },
+                legend: {
+                    orientation: "h",
+                    yanchor: "bottom",
+                    y: 1.02,
+                    xanchor: "right",
+                    x: 1
+                },
+                xaxis: {
+                    showgrid: true,
+                    gridcolor: "#dbe3ef",
+                    tickangle: 90
+                },
+                yaxis: {
+                    showgrid: true,
+                    gridcolor: "#dbe3ef"
+                }
+            };
+        }
+
+        function renderTurnChart(matrix, turnover) {
+            const buyCodes = (turnover.buy?.[CONFIG.monitorKey] || []).map(toMonitorCode);
+            const sellCodes = (turnover.sell?.[CONFIG.monitorKey] || []).map(toMonitorCode);
+            const traces = [];
+
+            matrix.columns.forEach((column) => {
+                if (buyCodes.includes(column.name)) {
+                    traces.push({
+                        x: matrix.times,
+                        y: column.values,
+                        type: "scatter",
+                        mode: "lines",
+                        name: column.name,
+                        line: { color: "#d37440", width: 1.4 }
+                    });
+                } else if (sellCodes.includes(column.name)) {
+                    traces.push({
+                        x: matrix.times,
+                        y: column.values,
+                        type: "scatter",
+                        mode: "lines",
+                        name: column.name,
+                        line: { color: "#0070c0", width: 1.4 }
+                    });
+                }
+            });
+
+            const layout = baseLayout("换仓数据", 430);
+            layout.showlegend = false;
+            layout.yaxis.title = "Individual Stock Value";
+            Plotly.newPlot("turn-chart", traces, layout, { responsive: true, displayModeBar: false });
+        }
+
+        function renderDeviationChart(matrix, turnover) {
+            const excluded = new Set([
+                ...(turnover.buy?.[CONFIG.monitorKey] || []).map(toMonitorCode),
+                ...(turnover.sell?.[CONFIG.monitorKey] || []).map(toMonitorCode)
+            ]);
+
+            const validColumns = matrix.columns
+                .filter((column) => !excluded.has(column.name))
+                .map((column) => ({ name: column.name, value: column.values[column.values.length - 1] }))
+                .filter((item) => Number.isFinite(item.value))
+                .sort((a, b) => a.value - b.value);
+
+            const median = (() => {
+                const values = validColumns.map((item) => item.value);
+                const mid = Math.floor(values.length / 2);
+                if (!values.length) {
+                    return 0;
+                }
+                if (values.length % 2) {
+                    return values[mid];
+                }
+                return (values[mid - 1] + values[mid]) / 2;
+            })();
+
+            const deviations = validColumns.map((item) => median === 0 ? 0 : item.value / median - 1);
+            const positiveMax = Math.max(0, ...deviations);
+            const negativeMin = Math.min(0, ...deviations);
+
+            const colors = deviations.map((value) => {
+                if (value >= 0) {
+                    const ratio = positiveMax ? value / positiveMax : 0;
+                    return `rgba(7, 32, 97, ${0.35 + 0.65 * ratio})`;
+                }
+                const ratio = negativeMin ? Math.abs(value / negativeMin) : 0;
+                return `rgba(76, 134, 197, ${0.30 + 0.60 * ratio})`;
+            });
+
+            const trace = {
+                y: validColumns.map((item) => item.name),
+                x: deviations,
+                type: "bar",
+                orientation: "h",
+                marker: { color: colors },
+                text: deviations.map((value) => (value * 100).toFixed(2) + "%"),
+                textposition: "auto",
+                hovertemplate: "%{y}<br>偏离: %{x:.2%}<extra></extra>"
+            };
+
+            const layout = baseLayout("中位数偏离", 1180);
+            layout.showlegend = false;
+            layout.xaxis.title = "Deviation";
+            layout.xaxis.tickformat = ".0%";
+            layout.xaxis.zeroline = true;
+            layout.xaxis.zerolinecolor = "#24324b";
+            layout.yaxis.title = "Stock";
+            Plotly.newPlot("deviation-chart", [trace], layout, { responsive: true, displayModeBar: false });
+        }
+
+        function renderSettlementChart(rows) {
+            const sorted = rows
+                .map((row) => ({
+                    time: row.time,
+                    signedOrderValue: String(row["交易"] || "").startsWith("买") ? -Number(row.order_value) : Number(row.order_value),
+                    netSum: Number(row.net_sum)
+                }))
+                .filter((row) => Number.isFinite(row.signedOrderValue) && Number.isFinite(row.netSum));
+
+            const trace1 = {
+                x: sorted.map((row) => row.time),
+                y: sorted.map((row) => row.netSum),
+                type: "scatter",
+                mode: "lines",
+                name: "累计净成交",
+                line: { color: "#1f77b4", width: 2 },
+                hovertemplate: "时间: %{x}<br>累计净成交: %{y:,.0f}<extra></extra>"
+            };
+
+            const trace2 = {
+                x: sorted.map((row) => row.time),
+                y: sorted.map((row) => row.signedOrderValue),
+                type: "scatter",
+                mode: "markers",
+                name: "订单金额",
+                yaxis: "y2",
+                marker: {
+                    size: 6,
+                    opacity: 0.78,
+                    color: sorted.map((row) => row.signedOrderValue < 0 ? "#c2552d" : "#547fb9")
+                },
+                hovertemplate: "时间: %{x}<br>订单金额: %{y:,.0f}<extra></extra>"
+            };
+
+            const layout = baseLayout("交易细节 ~ 阿尔法1号(股衍交割单)", 330);
+            layout.yaxis.title = "累计净成交金额";
+            layout.yaxis2 = {
+                title: "订单金额（负买，正卖）",
+                side: "right",
+                overlaying: "y",
+                showgrid: false
+            };
+
+            if (sorted.some((row) => row.time === "14:30")) {
+                layout.shapes = [{
+                    type: "line",
+                    x0: "14:30",
+                    x1: "14:30",
+                    y0: 0,
+                    y1: 1,
+                    xref: "x",
+                    yref: "paper",
+                    line: { color: "#b04f2c", width: 2, dash: "dash" }
+                }];
+            }
+
+            Plotly.newPlot("settlement-chart", [trace1, trace2], layout, { responsive: true, displayModeBar: false });
+        }
+
+        function renderModelChart(rows) {
+            const grouped = new Map();
+            rows.forEach((row) => {
+                const orderType = row.order_type;
+                if (orderType !== "buy" && orderType !== "sell") {
+                    return;
+                }
+                const time = String(row.time || "").slice(0, 5);
+                const key = time + "|" + orderType;
+                const current = grouped.get(key) || { sum: 0, count: 0 };
+                current.sum += Number(row.chg_pre);
+                current.count += 1;
+                grouped.set(key, current);
+            });
+
+            const times = Array.from(new Set(rows.map((row) => String(row.time || "").slice(0, 5))))
+                .filter(Boolean)
+                .sort();
+
+            const buySeries = [];
+            const sellSeries = [];
+            const differSeries = [];
+
+            times.forEach((time) => {
+                const buyData = grouped.get(time + "|buy");
+                const sellData = grouped.get(time + "|sell");
+                const buyValue = buyData ? buyData.sum / buyData.count * 100 : 0;
+                const sellValue = sellData ? sellData.sum / sellData.count * 100 : 0;
+                buySeries.push(buyValue);
+                sellSeries.push(sellValue);
+                differSeries.push(sellValue - buyValue);
+            });
+
+            const traces = [
+                {
+                    x: times,
+                    y: differSeries,
+                    type: "scatter",
+                    mode: "lines",
+                    name: "differ",
+                    line: { color: "#202020", width: 2 }
+                },
+                {
+                    x: times,
+                    y: sellSeries,
+                    type: "scatter",
+                    mode: "lines",
+                    name: "sell",
+                    line: { color: "#4f9ceb", width: 1.8 }
+                },
+                {
+                    x: times,
+                    y: buySeries,
+                    type: "scatter",
+                    mode: "lines",
+                    name: "buy",
+                    line: { color: "#de8a59", width: 1.8 }
+                }
+            ];
+
+            const layout = baseLayout("2024-11-15 ~ 阿尔法1号_长江两融_模型", 330);
+            layout.yaxis.title = "收益偏离";
+            layout.yaxis.ticksuffix = "%";
+            layout.shapes = [{
+                type: "line",
+                x0: 0,
+                x1: 1,
+                xref: "paper",
+                y0: 0,
+                y1: 0,
+                yref: "y",
+                line: { color: "red", width: 2 }
+            }];
+            Plotly.newPlot("model-chart", traces, layout, { responsive: true, displayModeBar: false });
+        }
+
+        async function renderAll() {
+            try {
+                const [monitorCsv, turnover, settlementCsv, modelCsv] = await Promise.all([
+                    fetchText(CONFIG.paths.monitorCsv),
+                    fetchJson(CONFIG.paths.turnoverJson),
+                    fetchText(CONFIG.paths.settlementCsv),
+                    fetchText(CONFIG.paths.modelCsv)
+                ]);
+
+                const monitorMatrix = loadMatrixCsv(monitorCsv);
+                const settlementRows = parseCsv(settlementCsv);
+                const modelRows = parseCsv(modelCsv);
+
+                renderTurnChart(monitorMatrix, turnover);
+                renderDeviationChart(monitorMatrix, turnover);
+                renderSettlementChart(settlementRows);
+                renderModelChart(modelRows);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        renderAll();
+    </script>
+</body>
+</html>

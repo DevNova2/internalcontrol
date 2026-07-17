@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路演材料</title>
+</head>
+<body>
+<object id="myPdf" type="application/pdf" data="{% static 'pdf/luyan202401.pdf' %}" width="100%"></object>
+
+{#<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+<script src="{% static 'bootstrap-4.6.2/jquery-3.6.0.min.js' %}"></script>
+<script>
+    var height = $(window).height();
+    $("#myPdf").css("height", height);//设置初始化高度
+    $(window).resize(function () {//设置窗口改变时的高度
+        var height = $(window).height();
+        $("#myPdf").css("height", height)
+    })
+</script>
+</body>
+</html>

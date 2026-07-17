@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 策略 | 屿阔精选1号 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col col-lg-1">
+        </div>
+        <div class="col-md-auto">
+            <h2>策略 | 屿阔精选一号</h2>
+            {% include 'mult_factor/yk_first/inc_all.html' %}
+            {% include 'mult_factor/yk_first/inc_VaR_ES.html' %}
+        </div>
+        <div class="col col-lg-2">
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

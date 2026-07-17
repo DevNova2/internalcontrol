@@ -66,3 +66,29 @@ node-v*-linux-*/
 
 # ICIR-vue 生成的业务数据
 /ICIR-vue/frontend/public/haochi.json
+
+# 所有子项目的运行时和调试文件
+.run/
+.local-node/
+.dbg/
+*.pid
+*.sock
+nohup.out
+.pytest_cache/
+.coverage
+coverage/
+debug-*.md
+
+# 其他业务数据和本地数据库
+*.xls
+*.db
+*.sqlite
+*.sqlite3
+*.parquet
+*.feather
+# haochi-vue 生成的业务数据
+/haochi-vue/public/haochi.json
+
+# Internal_System 本地演示媒体
+/Internal_System/dq_alpha_one/static/pdf/
+/Internal_System/dq_alpha_one/static/video/

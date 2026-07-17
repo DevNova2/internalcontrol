@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ pro }}{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center" style="margin-top: 3em">
+
+        <div class="col-11">
+            {{ net_back|safe }}
+        </div>
+
+    </div>
+    {% if user.is_superuser %}
+        <div class="row justify-content-center" style="margin-top: 3em">
+
+            <div class="col-11">
+                {{ net_sst|safe }}
+            </div>
+        </div>
+    {% endif %}
+    <div class="row justify-content-center" style="margin-top: 3em">
+
+        <div class="col-11">
+            {{ chg_detail|safe }}
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f4f6fa;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 1680px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .page-header {
+            background: #ffffff;
+            border: 1px solid #dde4ee;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(31, 41, 55, 0.06);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #5b6577;
+            font-size: 14px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .left-column {
+            display: grid;
+            gap: 24px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #dde4ee;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(31, 41, 55, 0.06);
+            padding: 18px 18px 12px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .panel-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #eaf0fb;
+            color: #365784;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .panel-subtitle {
+            margin: 0 0 10px;
+            color: #667085;
+            font-size: 13px;
+        }
+
+        .plotly-wrapper {
+            width: 100%;
+        }
+
+        .plotly-wrapper > div {
+            width: 100% !important;
+        }
+
+        .plotly-wrapper .js-plotly-plot,
+        .plotly-wrapper .plot-container,
+        .plotly-wrapper .svg-container {
+            width: 100% !important;
+        }
+
+        @media (max-width: 1280px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                padding: 16px;
+            }
+
+            .page-header,
+            .panel {
+                border-radius: 14px;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="page-header">
+            <h1>{{ page_title }}</h1>
+            <p>按首图的四图结构排版展示，右侧保留偏离分布，左侧下方分别替换为交割单图与阿尔法1号长江两融模型图。</p>
+        </section>
+
+        <section class="dashboard">
+            <div class="left-column">
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">换仓数据</h2>
+                        <span class="panel-tag">数据日期 {{ monitor_date }}</span>
+                    </div>
+                    <p class="panel-subtitle">沿用首图顶部左侧风格，展示买入与卖出股票的分时变化。</p>
+                    <div class="plotly-wrapper">{{ turn_chart|safe }}</div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">交割单图</h2>
+                        <span class="panel-tag">数据日期 {{ trade_detail_date }}</span>
+                    </div>
+                    <p class="panel-subtitle">替换原盈亏图，展示股衍交割单的累计净成交与订单金额。</p>
+                    <div class="plotly-wrapper">{{ settlement_chart|safe }}</div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">阿尔法1号_长江两融_模型</h2>
+                        <span class="panel-tag">数据日期 {{ model_date }}</span>
+                    </div>
+                    <p class="panel-subtitle">替换原杠杆图，展示模型分时买卖均值与差值走势。</p>
+                    <div class="plotly-wrapper">{{ model_chart|safe }}</div>
+                </article>
+            </div>
+
+            <article class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">中位数偏离</h2>
+                    <span class="panel-tag">数据日期 {{ monitor_date }}</span>
+                </div>
+                <p class="panel-subtitle">沿用首图右侧的大图区块，展示当前股票相对中位数的偏离分布。</p>
+                <div class="plotly-wrapper">{{ deviation_chart|safe }}</div>
+            </article>
+        </section>
+    </div>
+</body>
+</html>

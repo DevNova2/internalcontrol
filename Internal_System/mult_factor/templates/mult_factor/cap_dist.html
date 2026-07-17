@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 大A市值分布 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-center"><h4>大A市值分布 ~ {{ date }} </h4></div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-11">
+            {{ fig|safe }}
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

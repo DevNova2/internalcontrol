@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 路演材料 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block pdf %}
+    <object id="myPdf" type="application/pdf" data="{% static 'pdf/luyan202401.pdf' %}" width="100%"></object>
+
+{% endblock %}
+
+
+{% block footer %}
+    <script>var height = $(window).height();
+    $("#myPdf").css("height", height);//设置初始化高度
+    $(window).resize(function () {//设置窗口改变时的高度
+        var height = $(window).height();
+        $("#myPdf").css("height", height)
+    })
+    </script>
+{% endblock %}

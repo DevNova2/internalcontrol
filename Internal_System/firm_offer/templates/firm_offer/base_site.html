@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    水碓泉内控系统
+{#    {% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} |{{ site_title|default:_('Django site admin') }}#}
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">
+        {#        {{ site_header|default:_('Django administration') }}#}
+        水碓泉内控系统V1.0
+    </a></h1>
+    {% if user.is_anonymous %}
+        {% include "admin/color_theme_toggle.html" %}
+    {% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

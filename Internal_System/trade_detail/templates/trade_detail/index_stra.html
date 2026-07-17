@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 策略分时详情 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <h4>交易日：{{ trade_date }}</h4>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig_index_a|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_index_yk|safe }}
+        </div>
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig_buy_a|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_buy_yk|safe }}
+        </div>
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig_sell_a|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_sell_yk|safe }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

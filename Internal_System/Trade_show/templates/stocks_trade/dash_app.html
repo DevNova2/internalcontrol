@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 各交易实时细节 {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-center"><h4>各交易实时细节对比 ~ 交易日：{{ trade_date }}</h4></div>
+        <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-6">
+            {{ fig1|safe }}
+        </div>
+        <div class="col-6">
+            {{fig3|safe }}
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+
+        <div class="col-6">
+            {{ fig2|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig4|safe }}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

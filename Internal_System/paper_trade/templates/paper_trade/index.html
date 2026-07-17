@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 策略 {{ pro }} {% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-center"><h4>策略（{{ pro }}） ~ 双边换仓损失( {{ loss }} )</h4></div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-12">
+            {{ fig_value|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+
+        <div class="col-12">
+            {{ fig_value_h|safe }}
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center" style="margin-top: 3em;">
+        <div class="col-6">
+            {{ fig_map|safe }}
+        </div>
+        <div class="col-6">
+            {{ fig_map_h|safe }}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
