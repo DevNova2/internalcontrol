@@ -1,0 +1,56 @@
+# 前端依赖和编译结果
+node_modules/
+dist/
+
+# Python 缓存和虚拟环境
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 密钥和环境变量
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+
+# 日志和运行输出
+logs/
+*.log
+output/
+exports/
+svg_output/
+
+# 编辑器和系统文件
+.vscode/
+.idea/
+.DS_Store
+
+# 临时文件
+*.tmp
+*.bak
+
+# Node 运行环境和安装包
+node-v*-linux-*/
+*.tar.xz
+
+# 业务数据
+**/public/data/
+*.csv
+*.xlsx
+*.pkl
+
+# npm 缓存
+.npm-cache/
+.npm/
+
+# 服务器本地环境
+.local/
+.docker-tmp/
+# 调试文件
+.dbg/
+
+# 根目录业务数据
+/data/

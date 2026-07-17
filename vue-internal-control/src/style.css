@@ -1,0 +1,256 @@
+body {
+  margin: 0;
+  min-width: 1200px;
+  background: #f4f6fa;
+  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+  background: url('./assets/bg-internal.png') center center / cover no-repeat fixed;
+}
+
+.page-shell {
+  padding: 20px 8px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  min-height: 80px;
+  align-items: flex-start;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.toolbar--inline {
+  margin-bottom: 0;
+  justify-content: flex-end;
+}
+
+.toolbar-label {
+  color: #4b5565;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toolbar-select {
+  min-width: 260px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #cfd8e5;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.left-column {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.right-column {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.top-right-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  min-height: 80px;
+  align-items: flex-start;
+}
+
+.brand-logo {
+  height: 72px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+.panel {
+  background: #d7e7ff;
+  border: 1px solid #dde4ee;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(31, 41, 55, 0.06);
+  padding: 8px;
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.left-column > .card--turn {
+  flex: 180 1 0;
+}
+
+.left-column > .card--model {
+  flex: 160 1 0;
+}
+
+.left-column > .card--settlement {
+  flex: 180 1 0;
+}
+
+.right-column > .card--deviation {
+  flex: 1 1 auto;
+}
+
+.chart {
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  background: #d7e7ff;
+  border-radius: 12px;
+}
+
+.right-column > .card--deviation .chart {
+  background: #d7e7ff;
+  border-radius: 12px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  margin-bottom: 2px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.panel-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eaf0fb;
+  color: #365784;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.panel-subtitle {
+  margin: 0 0 4px;
+  color: #667085;
+  font-size: 12px;
+}
+
+.chart--loading {
+  position: relative;
+  background: linear-gradient(90deg, #f2f5fa 25%, #e7edf7 50%, #f2f5fa 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite linear;
+  border-radius: 12px;
+}
+
+.error-banner {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  color: #b42318;
+  font-size: 14px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 1280px) {
+  body {
+    min-width: 0;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+    flex: 0 0 auto;
+  }
+
+  .left-column,
+  .right-column {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-shell {
+    padding: 20px 8px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .top-right-bar {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .toolbar-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .panel {
+    border-radius: 14px;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
