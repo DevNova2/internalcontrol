@@ -54,3 +54,12 @@ node-v*-linux-*/
 
 # 根目录业务数据
 /data/
+
+# strategy-charts-vue 运行时文件
+/strategy-charts-vue/.run/
+/strategy-charts-vue/.local-node/
+/strategy-charts-vue/*.pid
+
+# strategy-charts-vue 临时导出图
+/strategy-charts-vue/Page29-*.svg
+/strategy-charts-vue/pc07_*.svg
