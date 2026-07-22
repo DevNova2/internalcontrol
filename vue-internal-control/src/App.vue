@@ -8,7 +8,6 @@ import logoImage from './assets/logo.png'
 const loading = ref(true)
 const error = ref('')
 const selectedProductId = ref(PRODUCTS[0].id)
-const selectedDate = ref('')
 const currentProduct = ref(PRODUCTS[0])
 let refreshTimer = null
 const REFRESH_INTERVAL_MS = 30_000
@@ -23,11 +22,8 @@ async function loadCharts() {
   loading.value = true
   error.value = ''
   try {
-    const result = await loadInternalControlCharts(selectedProductId.value, selectedDate.value)
+    const result = await loadInternalControlCharts(selectedProductId.value)
     currentProduct.value = result.product
-    if (result.product?.date) {
-      selectedDate.value = result.product.date
-    }
     Object.assign(charts, {
       turn: result.turn,
       deviation: result.deviation,
