@@ -341,7 +341,12 @@ function createSettlementChart(rows, product) {
           icon: 'path://M2 5 H22 V7 H2 Z',
         },
         {
-          name: '订单金额',
+          name: '卖出',
+          icon: 'circle',
+        },
+        {
+          name: '买入',
+          icon: 'circle',
         },
       ],
       itemWidth: 22,
@@ -352,6 +357,7 @@ function createSettlementChart(rows, product) {
     yaxis: {
       title: '累计净成交金额',
       range: [netMin - netPadding, netMax + netPadding],
+      tickformat: ',.2f',
     },
     yaxis2: {
       title: '订单金额（负买，正卖）',
@@ -403,6 +409,34 @@ function createSettlementChart(rows, product) {
           showscale: false,
         },
         hovertemplate: '时间: %{x}<br>订单金额: %{y:,.0f}<extra></extra>',
+      },
+      {
+        x: [],
+        y: [],
+        type: 'scatter',
+        mode: 'markers',
+        name: '卖出',
+        marker: {
+          size: 9,
+          symbol: 'circle',
+          opacity: 1,
+          color: 'rgba(178, 10, 28, 1)',
+        },
+        hovertemplate: '<extra></extra>',
+      },
+      {
+        x: [],
+        y: [],
+        type: 'scatter',
+        mode: 'markers',
+        name: '买入',
+        marker: {
+          size: 9,
+          symbol: 'circle',
+          opacity: 1,
+          color: 'rgba(5, 10, 172, 1)',
+        },
+        hovertemplate: '<extra></extra>',
       },
     ],
     layout,

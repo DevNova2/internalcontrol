@@ -121,6 +121,17 @@ function getMargin(value, fallback) {
   return Number.isFinite(value) ? value : fallback
 }
 
+function formatThousandsFixed(value, decimals = 2) {
+  const number = Number(value)
+  if (!Number.isFinite(number)) {
+    return value
+  }
+  return number.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
+}
+
 function buildScatterColor(trace) {
   if (!Array.isArray(trace.marker?.color)) {
     return trace.marker?.color || trace.line?.color || '#4f6ef7'
@@ -245,7 +256,9 @@ function buildOption() {
       min: props.layout.yaxis?.range?.[0],
       max: props.layout.yaxis?.range?.[1],
       axisLabel: {
-        formatter: props.layout.yaxis?.ticksuffix ? `{value}${props.layout.yaxis.ticksuffix}` : undefined,
+        formatter: props.layout.yaxis?.tickformat === ',.2f'
+          ? (value) => formatThousandsFixed(value, 2)
+          : (props.layout.yaxis?.ticksuffix ? `{value}${props.layout.yaxis.ticksuffix}` : undefined),
       },
       splitLine: {
         show: true,
