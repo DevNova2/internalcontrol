@@ -283,6 +283,7 @@ function buildOption() {
     legend: {
       show: props.layout.showlegend !== false,
       top: legendLayout.top ?? 0,
+      left: legendLayout.left ?? 'center',
       orient: legendLayout.orientation === 'v' ? 'vertical' : 'horizontal',
       itemWidth: legendLayout.itemWidth,
       itemHeight: legendLayout.itemHeight,

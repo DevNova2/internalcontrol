@@ -524,13 +524,18 @@ function createModelChart(rows, product) {
   layout.legend = {
     data: data.map((trace) => ({
       name: trace.name,
-      // Render the legend as a plain line segment instead of ECharts' default line-with-circle icon.
-      icon: 'path://M2 6 H22',
+      icon: 'path://M0 2 H24 V4 H0 Z',
+      itemStyle: {
+        color: trace.line.color,
+        borderColor: trace.line.color,
+      },
     })),
-    itemWidth: 22,
+    itemWidth: 24,
     itemHeight: 6,
-    itemGap: 14,
+    itemGap: 18,
     top: 0,
+    left: 'center',
+    orientation: 'h',
   }
 
   return {
