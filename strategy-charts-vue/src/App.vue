@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import heatmapImageUrl from '../pc07_热力图_网页右侧比例_单行标题.svg?url'
+import heatmapImageUrl from '../09_热力图_网页.svg?url'
 import ChartCard from './components/ChartCard.vue'
 import PlotlyChart from './components/PlotlyChart.vue'
 import {

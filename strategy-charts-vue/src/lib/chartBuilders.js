@@ -11,22 +11,47 @@ function parseDate(value) {
   return new Date(`${value}T00:00:00`)
 }
 
+function parseCsv(text) {
+  const lines = text.trim().split(/\r?\n/).filter(Boolean)
+  if (lines.length < 2) {
+    throw new Error('净值与回撤 CSV 没有有效数据')
+  }
+
+  const headers = lines[0].replace(/^\uFEFF/, '').split(',').map((value) => value.trim())
+  const records = lines.slice(1).map((line) => {
+    const values = line.split(',').map((value) => value.trim())
+    return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? '']))
+  })
+
+  if (!headers.includes('date') || !headers.some((header) => ['nav', 'net_value'].includes(header))) {
+    throw new Error('净值与回撤 CSV 必须包含 date 和 nav（或 net_value）列')
+  }
+
+  return records
+}
+
 export async function loadDashboardData() {
-  const [perfResp, minResp, singleResp] = await Promise.all([
+  const [perfResp, minResp, singleCsvResp, singleJsonResp] = await Promise.all([
     fetch('/data/performance_cumnet.json'),
     fetch('/data/min530.json'),
+    fetch('/data/cp09.csv'),
     fetch('/data/cp.json'),
   ])
 
-  if (!perfResp.ok || !minResp.ok || !singleResp.ok) {
+  if (!perfResp.ok || !minResp.ok || !singleJsonResp.ok) {
     throw new Error('图表数据加载失败，请检查 public/data 目录')
   }
 
-  const [performanceData, min530Data, singleData] = await Promise.all([
+  const [performanceData, min530Data, singleCsvText, fallbackSingleData] = await Promise.all([
     perfResp.json(),
     minResp.json(),
-    singleResp.json(),
+    singleCsvResp.text(),
+    singleJsonResp.json(),
   ])
+
+  const singleData = singleCsvResp.ok && /^\uFEFF?date\s*,/i.test(singleCsvText.trimStart())
+    ? parseCsv(singleCsvText)
+    : fallbackSingleData
 
   return {
     performanceData,
