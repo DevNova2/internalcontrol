@@ -1,6 +1,7 @@
 # 前端依赖和编译结果
 node_modules/
 dist/
+.vite/
 
 # Python 缓存和虚拟环境
 __pycache__/
@@ -88,6 +89,8 @@ debug-*.md
 *.feather
 # haochi-vue 生成的业务数据
 /haochi-vue/public/haochi.json
+# 改名后的折线图项目业务数据
+/zhexian-vue/public/haochi.json
 
 # Internal_System 本地演示媒体
 /Internal_System/dq_alpha_one/static/pdf/
